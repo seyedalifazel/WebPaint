@@ -4,7 +4,7 @@
 }
 
 .packLg {
-    width: 1320px;
+    width: 1306px;
     height: 608px;
     border: 1px solid #2b542c;
     margin: 0px auto;
@@ -21,17 +21,36 @@ canvas {
 
 .btn-list {
     height: 608px;
-    width: 100px;
+    width: 96px;
     border: 1px solid black;
     float: left;
 }
 
 .colorBtn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 47%;
+    height: 50px;
 }
 
 .red {
     background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.green {
+    background-color: green;
+}
+
+.black {
+    background-color: black;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.pink {
+    background-color: hotpink;
 }

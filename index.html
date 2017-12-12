@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Paint</title>
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery-3.2.1.min.js"></script>
 </head>
 <body>
@@ -12,8 +12,12 @@
     <div class="hidden-xs visible-lg visible-md margin-top">
         <div class="packLg">
             <div class="btn-list">
-                <button class="colorBtn red" onclick="setColor('#ff0000')"></button>
-                <button class="colorBtn red" onclick="setColor('blue')"></button>
+                <button class="colorBtn black" onclick="setColor('black')"></button>
+                <button class="colorBtn red" onclick="setColor('red')"></button>
+                <button class="colorBtn green" onclick="setColor('green')"></button>
+                <button class="colorBtn blue" onclick="setColor('blue')"></button>
+                <button class="colorBtn yellow" onclick="setColor('yellow')"></button>
+                <button class="colorBtn pink" onclick="setColor('hotpink')"></button>
             </div>
             <canvas id="canvasPaintLg" width="1200" height="600"></canvas>
         </div>
@@ -28,6 +32,7 @@
     context = document.getElementById("canvasPaintLg").getContext("2d");
     //vaziyate naghashi
     var paint;
+    var colorPick="#00ff00";
 
     $('#canvasPaintLg').mousedown(function (e) {
         paint = true;
@@ -52,17 +57,16 @@
     var clickXlg = new Array();
     var clickYlg = new Array();
     var clickDraglg = new Array();
-    alert("add2");
+    var colorLg=new Array();
     function addClick(x, y, dragging) {
         clickXlg.push(x);
         clickYlg.push(y);
         clickDraglg.push(dragging);
+        colorLg.push(colorPick);
     }
 
     function redrawLg() {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-        context.strokeStyle = "#df4b26";
         context.lineJoin = "round";
         context.lineWidth = 5;
 
@@ -74,6 +78,7 @@
                 context.moveTo(clickXlg[i] - 1, clickYlg[i]);
             }
             context.lineTo(clickXlg[i], clickYlg[i]);
+            context.strokeStyle=colorLg[i];
             context.closePath();
             context.stroke();
         }
@@ -104,11 +109,13 @@
     var clickX = new Array();
     var clickY = new Array();
     var clickDrag = new Array();
+    var color=new Array();
 
     function addClickSm(x, y, dragging) {
         clickX.push(x);
         clickY.push(y);
         clickDrag.push(dragging);
+        color.push(getColor());
     }
 
     function redraw() {
@@ -126,9 +133,14 @@
                 contextSm.moveTo(clickX[i] - 1, clickY[i]);
             }
             contextSm.lineTo(clickX[i], clickY[i]);
+            contextSm.strokeStyle=color[i];
             contextSm.closePath();
             contextSm.stroke();
         }
+    }
+    function setColor(colors) {
+        alert("111");
+        colorPick=colors;
     }
 </script>
 <script src="js/bootstrap.min.js"></script>
