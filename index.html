@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paint</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1">
+            <button class="colorBtn red" onclick="setColor('red')"></button>
+            <button class="colorBtn red" onclick="setColor('blue')"></button>
+        </div>
+        <div class="col-md-11">
+            <canvas id="canvasPaint"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    context = document.getElementById("canvasPaint").getContext("2d");
+    //vaziyate naghashi
+    var paint;
+    //baraye rang
+    var colorLine = "#00ff00";
+    $('#canvasPaint').mousedown(function (e) {
+        paint = true;
+        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+        redraw();
+    });
+    $('#canvasPaint').mousemove(function (e) {
+        if (paint) {
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            redraw();
+        }
+    });
+    $('#canvasPaint').mouseup(function (e) {
+        paint = false;
+    });
+    $('#canvasPaint').mouseleave(function (e) {
+        paint = false;
+    });
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+    var color = new Array();
+
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+        color.push(colorLine);
+    }
+
+    function redraw() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+        context.lineJoin = "round";
+        context.lineWidth = 3;
+
+        for (var i = 0; i < clickX.length; i++) {
+            context.beginPath();
+            if (clickDrag[i] && i) {
+                context.moveTo(clickX[i - 1], clickY[i - 1]);
+            } else {
+                context.moveTo(clickX[i] - 1, clickY[i] - 1);
+            }
+            context.lineTo(clickX[i], clickY[i]);
+            context.closePath();
+            context.strokeStyle = color[i];
+            context.stroke();
+        }
+    }
+
+    function setColor(colorClick) {
+        colorLine = colorClick;
+    }
+</script>
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
