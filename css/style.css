@@ -3,20 +3,35 @@
     padding: 0px;
 }
 
-
-.basePaintSection {
-    width: 1000px;
-    height: 1000px;
+.packLg {
+    width: 1320px;
+    height: 608px;
+    border: 1px solid #2b542c;
     margin: 0px auto;
-    border: 1px solid brown;
-    border-radius: 10px;
-    text-align: center;
 }
 
 canvas {
-    width: 100%;
-    height: 90vh;
-    border: 1px solid black;
+    border: 4px double black;
+    float: right;
 }
-.colorBtn{width: 30px;height: 30px;border-radius: 50%;}
-.red{background-color: red;}
+
+.margin-top {
+    margin-top: 20px
+}
+
+.btn-list {
+    height: 608px;
+    width: 100px;
+    border: 1px solid black;
+    float: left;
+}
+
+.colorBtn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.red {
+    background-color: red;
+}

@@ -9,75 +9,128 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-1">
-            <button class="colorBtn red" onclick="setColor('red')"></button>
-            <button class="colorBtn red" onclick="setColor('blue')"></button>
+    <div class="hidden-xs visible-lg visible-md margin-top">
+        <div class="packLg">
+            <div class="btn-list">
+                <button class="colorBtn red" onclick="setColor('#ff0000')"></button>
+                <button class="colorBtn red" onclick="setColor('blue')"></button>
+            </div>
+            <canvas id="canvasPaintLg" width="1200" height="600"></canvas>
         </div>
-        <div class="col-md-11">
-            <canvas id="canvasPaint"></canvas>
-        </div>
+    </div>
+    <div class="hidden-sm visible-xs">
+        <button class="colorBtn red" onclick="setColor('red')"></button>
+        <button class="colorBtn red" onclick="setColor('blue')"></button>
+        <canvas id="canvasPaintSm" width="280" height="500"></canvas>
     </div>
 </div>
 <script>
-    context = document.getElementById("canvasPaint").getContext("2d");
+    context = document.getElementById("canvasPaintLg").getContext("2d");
     //vaziyate naghashi
     var paint;
-    //baraye rang
-    var colorLine = "#00ff00";
-    $('#canvasPaint').mousedown(function (e) {
+
+    $('#canvasPaintLg').mousedown(function (e) {
         paint = true;
         addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-        redraw();
+        redrawLg();
     });
-    $('#canvasPaint').mousemove(function (e) {
+
+    $('#canvasPaintLg').mousemove(function (e) {
         if (paint) {
             addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            redrawLg();
+        }
+    });
+
+    $('#canvasPaintLg').mouseup(function (e) {
+        paint = false;
+    });
+
+    $('#canvasPaintLg').mouseleave(function (e) {
+        paint = false;
+    });
+    var clickXlg = new Array();
+    var clickYlg = new Array();
+    var clickDraglg = new Array();
+    alert("add2");
+    function addClick(x, y, dragging) {
+        clickXlg.push(x);
+        clickYlg.push(y);
+        clickDraglg.push(dragging);
+    }
+
+    function redrawLg() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+        context.strokeStyle = "#df4b26";
+        context.lineJoin = "round";
+        context.lineWidth = 5;
+
+        for (var i = 0; i < clickXlg.length; i++) {
+            context.beginPath();
+            if (clickDraglg[i] && i) {
+                context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
+            } else {
+                context.moveTo(clickXlg[i] - 1, clickYlg[i]);
+            }
+            context.lineTo(clickXlg[i], clickYlg[i]);
+            context.closePath();
+            context.stroke();
+        }
+    }
+    //for sm view
+    contextSm = document.getElementById("canvasPaintSm").getContext("2d");
+    $('#canvasPaintSm').mousedown(function (e) {
+        paint = true;
+        addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+
+        redraw();
+    });
+
+    $('#canvasPaintSm').mousemove(function (e) {
+        if (paint) {
+            addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
             redraw();
         }
     });
-    $('#canvasPaint').mouseup(function (e) {
+
+    $('#canvasPaintSm').mouseup(function (e) {
         paint = false;
     });
-    $('#canvasPaint').mouseleave(function (e) {
+
+    $('#canvasPaintSm').mouseleave(function (e) {
         paint = false;
     });
     var clickX = new Array();
     var clickY = new Array();
     var clickDrag = new Array();
-    var color = new Array();
 
-    function addClick(x, y, dragging) {
+    function addClickSm(x, y, dragging) {
         clickX.push(x);
         clickY.push(y);
         clickDrag.push(dragging);
-        color.push(colorLine);
     }
 
     function redraw() {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-        context.lineJoin = "round";
-        context.lineWidth = 3;
+        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+        contextSm.strokeStyle = "#df4b26";
+        contextSm.lineJoin = "round";
+        contextSm.lineWidth = 5;
 
         for (var i = 0; i < clickX.length; i++) {
-            context.beginPath();
+            contextSm.beginPath();
             if (clickDrag[i] && i) {
-                context.moveTo(clickX[i - 1], clickY[i - 1]);
+                contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
             } else {
-                context.moveTo(clickX[i] - 1, clickY[i] - 1);
+                contextSm.moveTo(clickX[i] - 1, clickY[i]);
             }
-            context.lineTo(clickX[i], clickY[i]);
-            context.closePath();
-            context.strokeStyle = color[i];
-            context.stroke();
+            contextSm.lineTo(clickX[i], clickY[i]);
+            contextSm.closePath();
+            contextSm.stroke();
         }
     }
-
-    function setColor(colorClick) {
-        colorLine = colorClick;
-    }
 </script>
-<script src="js/jquery-1.11.2.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
