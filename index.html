@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/FileSaver.js"></script>
-    <script src ="js/canvas-toBlob.js"></script>
+    <script src="js/canvas-toBlob.js"></script>
 
 </head>
 <body>
@@ -43,6 +43,10 @@
                 <button class="btn-select sizeBtn" onclick="setColor('white')">
                     <div><span class="fa fa-eraser"></span></div>
                     <i>eraser</i>
+                </button>
+                <button class="btn-select sizeBtn" onclick="clearCanvas()">
+                    <div><span class="fa fa-gavel"></span></div>
+                    <i>Clear</i>
                 </button>
                 <!--<button class="btn-select sizeBtn" onclick="setSrcImage()">-->
                 <!--<div><span class="fa fa-star"></span></div><i>logo</i>-->
@@ -105,7 +109,8 @@
         function redrawLg() {
             context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
             context.lineJoin = "round";
-
+            context.fillStyle = "#fff";
+            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
             for (var i = 0; i < clickXlg.length; i++) {
                 context.beginPath();
                 if (clickDraglg[i] && i) {
@@ -178,6 +183,17 @@
             }
         }
 
+        function clearCanvas() {
+            contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+            for (var i = 0; i < clickXlg.length; i++) {
+                clickXlg = [];
+                clickYlg = [];
+                clickDraglg = [];
+                colorLg = [];
+            }
+            redrawLg();
+        }
+
         function setColor(colors) {
             colorPick = colors;
         }
@@ -196,10 +212,11 @@
         function save() {
             //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
             var canvas = document.getElementById("canvasPaintLg");
-            canvas.toBlob(function(blob) {
+            canvas.toBlob(function (blob) {
                 saveAs(blob, "output.png");
             }, "image/png");
         };
+
 
     </script>
 </div>
