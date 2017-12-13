@@ -57,7 +57,7 @@
                     <i>save</i>
                 </button>
             </div>
-            <canvas id="canvasPaintLg" width="1200" height="600"></canvas>
+            <canvas id="canvasPaintLg" width="1100" height="550"></canvas>
         </div>
     </div>
     <div class="hidden-sm visible-xs">
@@ -65,161 +65,170 @@
         <button class="colorBtn red" onclick="setColor('blue')"></button>
         <canvas id="canvasPaintSm" width="280" height="500"></canvas>
     </div>
-    <script>
-        context = document.getElementById("canvasPaintLg").getContext("2d");
-        //vaziyate naghashi
-        var paint;
-        var colorPick = "#00ff00";
-        var sizePick = 1;
-        //var image=new Image();
-        $('#canvasPaintLg').mousedown(function (e) {
-            paint = true;
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-            redrawLg();
-        });
-
-        $('#canvasPaintLg').mousemove(function (e) {
-            if (paint) {
-                addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-                redrawLg();
-            }
-        });
-
-        $('#canvasPaintLg').mouseup(function (e) {
-            paint = false;
-        });
-
-        $('#canvasPaintLg').mouseleave(function (e) {
-            paint = false;
-        });
-        var clickXlg = new Array();
-        var clickYlg = new Array();
-        var clickDraglg = new Array();
-        var colorLg = new Array();
-        var sizeLg = new Array();
-
-        function addClick(x, y, dragging) {
-            clickXlg.push(x);
-            clickYlg.push(y);
-            clickDraglg.push(dragging);
-            colorLg.push(colorPick);
-            sizeLg.push(sizePick);
-        }
-
-        function redrawLg() {
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-            context.lineJoin = "round";
-            context.fillStyle = "#fff";
-            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-            for (var i = 0; i < clickXlg.length; i++) {
-                context.beginPath();
-                if (clickDraglg[i] && i) {
-                    context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
-                } else {
-                    context.moveTo(clickXlg[i] - 1, clickYlg[i]);
-                }
-                context.lineTo(clickXlg[i], clickYlg[i]);
-                context.strokeStyle = colorLg[i];
-                context.lineWidth = sizeLg[i];
-                //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
-                context.closePath();
-                context.stroke();
-            }
-        }
-
-        //for sm view
-        contextSm = document.getElementById("canvasPaintSm").getContext("2d");
-        $('#canvasPaintSm').mousedown(function (e) {
-            paint = true;
-            addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-
-            redraw();
-        });
-
-        $('#canvasPaintSm').mousemove(function (e) {
-            if (paint) {
-                addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-                redraw();
-            }
-        });
-
-        $('#canvasPaintSm').mouseup(function (e) {
-            paint = false;
-        });
-
-        $('#canvasPaintSm').mouseleave(function (e) {
-            paint = false;
-        });
-        var clickX = new Array();
-        var clickY = new Array();
-        var clickDrag = new Array();
-        var color = new Array();
-
-        function addClickSm(x, y, dragging) {
-            clickX.push(x);
-            clickY.push(y);
-            clickDrag.push(dragging);
-            color.push(getColor());
-        }
-
-        function redraw() {
-            contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-            contextSm.strokeStyle = "#df4b26";
-            contextSm.lineJoin = "round";
-            contextSm.lineWidth = 5;
-
-            for (var i = 0; i < clickX.length; i++) {
-                contextSm.beginPath();
-                if (clickDrag[i] && i) {
-                    contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
-                } else {
-                    contextSm.moveTo(clickX[i] - 1, clickY[i]);
-                }
-                contextSm.lineTo(clickX[i], clickY[i]);
-                contextSm.strokeStyle = color[i];
-                contextSm.closePath();
-                contextSm.stroke();
-            }
-        }
-
-        function clearCanvas() {
-            contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-            for (var i = 0; i < clickXlg.length; i++) {
-                clickXlg = [];
-                clickYlg = [];
-                clickDraglg = [];
-                colorLg = [];
-            }
-            redrawLg();
-        }
-
-        function setColor(colors) {
-            colorPick = colors;
-        }
-
-        function setSize(size) {
-            sizePick = size;
-        }
-
-        /*
-        function setSrcImage() {
-            image.src="img/Icon-512.png";
-            setSize(0);
-        }*/
-        var png;
-
-        function save() {
-            //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
-            var canvas = document.getElementById("canvasPaintLg");
-            canvas.toBlob(function (blob) {
-                saveAs(blob, "output.png");
-            }, "image/png");
-        };
-
-
-    </script>
 </div>
+<div class="container">
+    <form class="form-group">
+        <input type="text" class="form-control" placeholder="Enter Your Title">
+        <button class="form-control send">send</button>
+    </form>
+</div>
+
+<script>
+    context = document.getElementById("canvasPaintLg").getContext("2d");
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    //vaziyate naghashi
+    var paint;
+    var colorPick = "#00ff00";
+    var sizePick = 1;
+    //var image=new Image();
+    $('#canvasPaintLg').mousedown(function (e) {
+        paint = true;
+        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+        redrawLg();
+    });
+
+    $('#canvasPaintLg').mousemove(function (e) {
+        if (paint) {
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            redrawLg();
+        }
+    });
+
+    $('#canvasPaintLg').mouseup(function (e) {
+        paint = false;
+    });
+
+    $('#canvasPaintLg').mouseleave(function (e) {
+        paint = false;
+    });
+    var clickXlg = new Array();
+    var clickYlg = new Array();
+    var clickDraglg = new Array();
+    var colorLg = new Array();
+    var sizeLg = new Array();
+
+    function addClick(x, y, dragging) {
+        clickXlg.push(x);
+        clickYlg.push(y);
+        clickDraglg.push(dragging);
+        colorLg.push(colorPick);
+        sizeLg.push(sizePick);
+    }
+
+    function redrawLg() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+        context.lineJoin = "round";
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        for (var i = 0; i < clickXlg.length; i++) {
+            context.beginPath();
+            if (clickDraglg[i] && i) {
+                context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
+            } else {
+                context.moveTo(clickXlg[i] - 1, clickYlg[i]);
+            }
+            context.lineTo(clickXlg[i], clickYlg[i]);
+            context.strokeStyle = colorLg[i];
+            context.lineWidth = sizeLg[i];
+            //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
+            context.closePath();
+            context.stroke();
+        }
+    }
+
+    //for sm view
+    contextSm = document.getElementById("canvasPaintSm").getContext("2d");
+    $('#canvasPaintSm').mousedown(function (e) {
+        paint = true;
+        addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+
+        redraw();
+    });
+
+    $('#canvasPaintSm').mousemove(function (e) {
+        if (paint) {
+            addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            redraw();
+        }
+    });
+
+    $('#canvasPaintSm').mouseup(function (e) {
+        paint = false;
+    });
+
+    $('#canvasPaintSm').mouseleave(function (e) {
+        paint = false;
+    });
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+    var color = new Array();
+
+    function addClickSm(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+        color.push(getColor());
+    }
+
+    function redraw() {
+        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+        contextSm.strokeStyle = "#df4b26";
+        contextSm.lineJoin = "round";
+        contextSm.lineWidth = 5;
+
+        for (var i = 0; i < clickX.length; i++) {
+            contextSm.beginPath();
+            if (clickDrag[i] && i) {
+                contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
+            } else {
+                contextSm.moveTo(clickX[i] - 1, clickY[i]);
+            }
+            contextSm.lineTo(clickX[i], clickY[i]);
+            contextSm.strokeStyle = color[i];
+            contextSm.closePath();
+            contextSm.stroke();
+        }
+    }
+
+    function clearCanvas() {
+        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+        for (var i = 0; i < clickXlg.length; i++) {
+            clickXlg = [];
+            clickYlg = [];
+            clickDraglg = [];
+            colorLg = [];
+        }
+        redrawLg();
+    }
+
+    function setColor(colors) {
+        colorPick = colors;
+    }
+
+    function setSize(size) {
+        sizePick = size;
+    }
+
+    /*
+    function setSrcImage() {
+        image.src="img/Icon-512.png";
+        setSize(0);
+    }*/
+    var png;
+
+    function save() {
+        //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
+        var canvas = document.getElementById("canvasPaintLg");
+        canvas.toBlob(function (blob) {
+            saveAs(blob, "output.png");
+        }, "image/png");
+    };
+
+
+</script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

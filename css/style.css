@@ -2,10 +2,13 @@
     margin: 0px;
     padding: 0px;
 }
-
+body{
+    background-image: url("../img/bg.png");
+    background-repeat: repeat;
+}
 .packLg {
-    width: 1306px;
-    height: 608px;
+    width: 1206px;
+    height: 558px;
     border: 1px solid #2b542c;
     margin: 0px auto;
 }
@@ -20,10 +23,11 @@ canvas {
 }
 
 .btn-list {
-    height: 608px;
+    height: 558px;
     width: 96px;
     border: 1px solid black;
     float: left;
+    background-color: rgba(255,255,255,0.7);
 }
 
 .btn-select {
@@ -60,4 +64,7 @@ canvas {
     background-color: black;
     margin: 4px 0px;
 }
-.sizeBtn
+.send{
+    width: 15%;
+    margin-left: 4px;
+}
