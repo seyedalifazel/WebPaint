@@ -5,19 +5,53 @@
     <title>Paint</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
     <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/FileSaver.js"></script>
+    <script src ="js/canvas-toBlob.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
     <div class="hidden-xs visible-lg visible-md margin-top">
         <div class="packLg">
             <div class="btn-list">
-                <button class="colorBtn black" onclick="setColor('black')"></button>
-                <button class="colorBtn red" onclick="setColor('red')"></button>
-                <button class="colorBtn green" onclick="setColor('green')"></button>
-                <button class="colorBtn blue" onclick="setColor('blue')"></button>
-                <button class="colorBtn yellow" onclick="setColor('yellow')"></button>
-                <button class="colorBtn pink" onclick="setColor('hotpink')"></button>
+                <button class="btn-select black" onclick="setColor('black')"></button>
+                <button class="btn-select red" onclick="setColor('red')"></button>
+                <button class="btn-select green" onclick="setColor('green')"></button>
+                <button class="btn-select blue" onclick="setColor('blue')"></button>
+                <button class="btn-select yellow" onclick="setColor('yellow')"></button>
+                <button class="btn-select pink" onclick="setColor('hotpink')"></button>
+                <div class="seprate"></div>
+                <button class="btn-select sizeBtn" onclick="setSize(2)">
+                    <div><span class="fa fa-paint-brush"></span></div>
+                    <i>small</i>
+                </button>
+                <button class="btn-select sizeBtn" onclick="setSize(5)">
+                    <div><span class="fa fa-paint-brush"></span></div>
+                    <i>normal</i>
+                </button>
+                <button class="btn-select sizeBtn" onclick="setSize(10)">
+                    <div><span class="fa fa-paint-brush"></span></div>
+                    <i>large</i>
+                </button>
+                <button class="btn-select sizeBtn" onclick="setSize(15)">
+                    <div><span class="fa fa-paint-brush"></span></div>
+                    <i>huge</i>
+                </button>
+                <div class="seprate"></div>
+                <button class="btn-select sizeBtn" onclick="setColor('white')">
+                    <div><span class="fa fa-eraser"></span></div>
+                    <i>eraser</i>
+                </button>
+                <!--<button class="btn-select sizeBtn" onclick="setSrcImage()">-->
+                <!--<div><span class="fa fa-star"></span></div><i>logo</i>-->
+                <!--</button>-->
+                <div class="seprate"></div>
+                <button id="saveBtnId" class="btn-select saveBtn" onclick="save()">
+                    <div><span class="fa fa-save"></span></div>
+                    <i>save</i>
+                </button>
             </div>
             <canvas id="canvasPaintLg" width="1200" height="600"></canvas>
         </div>
@@ -27,122 +61,148 @@
         <button class="colorBtn red" onclick="setColor('blue')"></button>
         <canvas id="canvasPaintSm" width="280" height="500"></canvas>
     </div>
-</div>
-<script>
-    context = document.getElementById("canvasPaintLg").getContext("2d");
-    //vaziyate naghashi
-    var paint;
-    var colorPick="#00ff00";
-
-    $('#canvasPaintLg').mousedown(function (e) {
-        paint = true;
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-        redrawLg();
-    });
-
-    $('#canvasPaintLg').mousemove(function (e) {
-        if (paint) {
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+    <script>
+        context = document.getElementById("canvasPaintLg").getContext("2d");
+        //vaziyate naghashi
+        var paint;
+        var colorPick = "#00ff00";
+        var sizePick = 1;
+        //var image=new Image();
+        $('#canvasPaintLg').mousedown(function (e) {
+            paint = true;
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
             redrawLg();
-        }
-    });
+        });
 
-    $('#canvasPaintLg').mouseup(function (e) {
-        paint = false;
-    });
-
-    $('#canvasPaintLg').mouseleave(function (e) {
-        paint = false;
-    });
-    var clickXlg = new Array();
-    var clickYlg = new Array();
-    var clickDraglg = new Array();
-    var colorLg=new Array();
-    function addClick(x, y, dragging) {
-        clickXlg.push(x);
-        clickYlg.push(y);
-        clickDraglg.push(dragging);
-        colorLg.push(colorPick);
-    }
-
-    function redrawLg() {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-        context.lineJoin = "round";
-        context.lineWidth = 5;
-
-        for (var i = 0; i < clickXlg.length; i++) {
-            context.beginPath();
-            if (clickDraglg[i] && i) {
-                context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
-            } else {
-                context.moveTo(clickXlg[i] - 1, clickYlg[i]);
+        $('#canvasPaintLg').mousemove(function (e) {
+            if (paint) {
+                addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+                redrawLg();
             }
-            context.lineTo(clickXlg[i], clickYlg[i]);
-            context.strokeStyle=colorLg[i];
-            context.closePath();
-            context.stroke();
+        });
+
+        $('#canvasPaintLg').mouseup(function (e) {
+            paint = false;
+        });
+
+        $('#canvasPaintLg').mouseleave(function (e) {
+            paint = false;
+        });
+        var clickXlg = new Array();
+        var clickYlg = new Array();
+        var clickDraglg = new Array();
+        var colorLg = new Array();
+        var sizeLg = new Array();
+
+        function addClick(x, y, dragging) {
+            clickXlg.push(x);
+            clickYlg.push(y);
+            clickDraglg.push(dragging);
+            colorLg.push(colorPick);
+            sizeLg.push(sizePick);
         }
-    }
-    //for sm view
-    contextSm = document.getElementById("canvasPaintSm").getContext("2d");
-    $('#canvasPaintSm').mousedown(function (e) {
-        paint = true;
-        addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
 
-        redraw();
-    });
+        function redrawLg() {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+            context.lineJoin = "round";
 
-    $('#canvasPaintSm').mousemove(function (e) {
-        if (paint) {
-            addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            for (var i = 0; i < clickXlg.length; i++) {
+                context.beginPath();
+                if (clickDraglg[i] && i) {
+                    context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
+                } else {
+                    context.moveTo(clickXlg[i] - 1, clickYlg[i]);
+                }
+                context.lineTo(clickXlg[i], clickYlg[i]);
+                context.strokeStyle = colorLg[i];
+                context.lineWidth = sizeLg[i];
+                //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
+                context.closePath();
+                context.stroke();
+            }
+        }
+
+        //for sm view
+        contextSm = document.getElementById("canvasPaintSm").getContext("2d");
+        $('#canvasPaintSm').mousedown(function (e) {
+            paint = true;
+            addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+
             redraw();
-        }
-    });
+        });
 
-    $('#canvasPaintSm').mouseup(function (e) {
-        paint = false;
-    });
-
-    $('#canvasPaintSm').mouseleave(function (e) {
-        paint = false;
-    });
-    var clickX = new Array();
-    var clickY = new Array();
-    var clickDrag = new Array();
-    var color=new Array();
-
-    function addClickSm(x, y, dragging) {
-        clickX.push(x);
-        clickY.push(y);
-        clickDrag.push(dragging);
-        color.push(getColor());
-    }
-
-    function redraw() {
-        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-        contextSm.strokeStyle = "#df4b26";
-        contextSm.lineJoin = "round";
-        contextSm.lineWidth = 5;
-
-        for (var i = 0; i < clickX.length; i++) {
-            contextSm.beginPath();
-            if (clickDrag[i] && i) {
-                contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
-            } else {
-                contextSm.moveTo(clickX[i] - 1, clickY[i]);
+        $('#canvasPaintSm').mousemove(function (e) {
+            if (paint) {
+                addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+                redraw();
             }
-            contextSm.lineTo(clickX[i], clickY[i]);
-            contextSm.strokeStyle=color[i];
-            contextSm.closePath();
-            contextSm.stroke();
+        });
+
+        $('#canvasPaintSm').mouseup(function (e) {
+            paint = false;
+        });
+
+        $('#canvasPaintSm').mouseleave(function (e) {
+            paint = false;
+        });
+        var clickX = new Array();
+        var clickY = new Array();
+        var clickDrag = new Array();
+        var color = new Array();
+
+        function addClickSm(x, y, dragging) {
+            clickX.push(x);
+            clickY.push(y);
+            clickDrag.push(dragging);
+            color.push(getColor());
         }
-    }
-    function setColor(colors) {
-        alert("111");
-        colorPick=colors;
-    }
-</script>
+
+        function redraw() {
+            contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+            contextSm.strokeStyle = "#df4b26";
+            contextSm.lineJoin = "round";
+            contextSm.lineWidth = 5;
+
+            for (var i = 0; i < clickX.length; i++) {
+                contextSm.beginPath();
+                if (clickDrag[i] && i) {
+                    contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
+                } else {
+                    contextSm.moveTo(clickX[i] - 1, clickY[i]);
+                }
+                contextSm.lineTo(clickX[i], clickY[i]);
+                contextSm.strokeStyle = color[i];
+                contextSm.closePath();
+                contextSm.stroke();
+            }
+        }
+
+        function setColor(colors) {
+            colorPick = colors;
+        }
+
+        function setSize(size) {
+            sizePick = size;
+        }
+
+        /*
+        function setSrcImage() {
+            image.src="img/Icon-512.png";
+            setSize(0);
+        }*/
+        var png;
+
+        function save() {
+            //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
+            var canvas = document.getElementById("canvasPaintLg");
+            canvas.toBlob(function(blob) {
+                saveAs(blob, "output.png");
+            }, "image/png");
+        };
+
+    </script>
+</div>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
