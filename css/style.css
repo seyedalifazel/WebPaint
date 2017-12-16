@@ -2,10 +2,12 @@
     margin: 0px;
     padding: 0px;
 }
-body{
+
+body {
     background-image: url("../img/bg.png");
     background-repeat: repeat;
 }
+
 .packLg {
     width: 1206px;
     height: 558px;
@@ -17,7 +19,7 @@ canvas {
     border: 4px double black;
     float: right;
 }
-
+.clear{clear: both;}
 .margin-top {
     margin-top: 20px
 }
@@ -27,7 +29,7 @@ canvas {
     width: 96px;
     border: 1px solid black;
     float: left;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .btn-select {
@@ -58,13 +60,36 @@ canvas {
 .pink {
     background-color: hotpink;
 }
-.seprate{
+
+.seprate {
     width: 100%;
     height: 2px;
     background-color: black;
     margin: 4px 0px;
 }
-.send{
+
+.send {
     width: 15%;
     margin-left: 4px;
+}
+
+.packSm {
+    width: 308px;
+    height: 475px;
+    margin: 0px auto;
+    border: 1px solid black;
+}
+
+.btn-list-sm {
+    width: 306px;
+    height: 60px;
+    background-color: rgba(255,255,255,0.7);
+    margin: 0px auto;
+}
+.btn-control-sm{
+    text-align: center;
+}
+.btn-select-sm {
+    width: 15%;
+    height: 29px;
 }

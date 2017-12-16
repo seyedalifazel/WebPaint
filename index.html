@@ -9,7 +9,6 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/FileSaver.js"></script>
     <script src="js/canvas-toBlob.js"></script>
-
 </head>
 <body>
 <div class="container-fluid">
@@ -23,28 +22,28 @@
                 <button class="btn-select yellow" onclick="setColor('yellow')"></button>
                 <button class="btn-select pink" onclick="setColor('hotpink')"></button>
                 <div class="seprate"></div>
-                <button class="btn-select sizeBtn" onclick="setSize(2)">
+                <button class="btn-select" onclick="setSize(2)">
                     <div><span class="fa fa-paint-brush"></span></div>
                     <i>small</i>
                 </button>
-                <button class="btn-select sizeBtn" onclick="setSize(5)">
+                <button class="btn-select" onclick="setSize(5)">
                     <div><span class="fa fa-paint-brush"></span></div>
                     <i>normal</i>
                 </button>
-                <button class="btn-select sizeBtn" onclick="setSize(10)">
+                <button class="btn-select" onclick="setSize(10)">
                     <div><span class="fa fa-paint-brush"></span></div>
                     <i>large</i>
                 </button>
-                <button class="btn-select sizeBtn" onclick="setSize(15)">
+                <button class="btn-select" onclick="setSize(15)">
                     <div><span class="fa fa-paint-brush"></span></div>
                     <i>huge</i>
                 </button>
                 <div class="seprate"></div>
-                <button class="btn-select sizeBtn" onclick="setColor('white')">
+                <button class="btn-select" onclick="setColor('white')">
                     <div><span class="fa fa-eraser"></span></div>
                     <i>eraser</i>
                 </button>
-                <button class="btn-select sizeBtn" onclick="clearCanvas()">
+                <button class="btn-select" onclick="clearCanvas()">
                     <div><span class="fa fa-gavel"></span></div>
                     <i>Clear</i>
                 </button>
@@ -52,7 +51,7 @@
                 <!--<div><span class="fa fa-star"></span></div><i>logo</i>-->
                 <!--</button>-->
                 <div class="seprate"></div>
-                <button id="saveBtnId" class="btn-select saveBtn" onclick="save()">
+                <button id="saveBtnId" class="btn-select" onclick="save()">
                     <div><span class="fa fa-save"></span></div>
                     <i>save</i>
                 </button>
@@ -60,10 +59,142 @@
             <canvas id="canvasPaintLg" width="1100" height="550"></canvas>
         </div>
     </div>
+
+
+    <!--SCRIPT CONTROL in Lg mode -->
+    <script>
+        context = document.getElementById("canvasPaintLg").getContext("2d");
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        //vaziyate naghashi
+        var paint;
+        var colorPick = "#00ff00";
+        var sizePick = 1;
+        //var image=new Image();
+        $('#canvasPaintLg').mousedown(function (e) {
+            paint = true;
+            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+            redrawLg();
+        });
+
+        $('#canvasPaintLg').mousemove(function (e) {
+            if (paint) {
+                addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+                redrawLg();
+            }
+        });
+
+        $('#canvasPaintLg').mouseup(function (e) {
+            paint = false;
+        });
+
+        $('#canvasPaintLg').mouseleave(function (e) {
+            paint = false;
+        });
+        var clickXlg = new Array();
+        var clickYlg = new Array();
+        var clickDraglg = new Array();
+        var colorLg = new Array();
+        var sizeLg = new Array();
+
+        function addClick(x, y, dragging) {
+            clickXlg.push(x);
+            clickYlg.push(y);
+            clickDraglg.push(dragging);
+            colorLg.push(colorPick);
+            sizeLg.push(sizePick);
+        }
+
+        function redrawLg() {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+            context.lineJoin = "round";
+            context.fillStyle = "#fff";
+            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+            for (var i = 0; i < clickXlg.length; i++) {
+                context.beginPath();
+                context.lineWidth = sizeLg[i];
+                context.strokeStyle = colorLg[i];
+                if (clickDraglg[i] && i) {
+                    context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
+                } else {
+                    context.moveTo(clickXlg[i] - 1, clickYlg[i]);
+                }
+                context.lineTo(clickXlg[i], clickYlg[i]);
+                //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
+                context.closePath();
+                context.stroke();
+            }
+        }
+
+        function clearCanvas() {
+            contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+            clickXlg = [];
+            clickYlg = [];
+            clickDraglg = [];
+            colorLg = [];
+            redrawLg();
+        }
+
+        function setColor(colors) {
+            colorPick = colors;
+        }
+
+        function setSize(size) {
+            sizePick = size;
+        }
+
+        /*
+        function setSrcImage() {
+            image.src="img/Icon-512.png";
+            setSize(0);
+        }*/
+        function save() {
+            //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
+            var canvas = document.getElementById("canvasPaintLg");
+            canvas.toBlob(function (blob) {
+                saveAs(blob, "output.png");
+            }, "image/png");
+        };
+
+
+    </script>
+
+
     <div class="hidden-sm visible-xs">
-        <button class="colorBtn red" onclick="setColor('red')"></button>
-        <button class="colorBtn red" onclick="setColor('blue')"></button>
-        <canvas id="canvasPaintSm" width="280" height="500"></canvas>
+        <div class="packSm">
+            <canvas id="canvasPaintSm" width="300" height="400"></canvas>
+            <div class="clear"></div>
+            <div class="btn-list-sm">
+                <div class="btn-control-sm">
+                    <button class="btn-select-sm black" onclick="setColorSm('black')"></button>
+                    <button class="btn-select-sm red" onclick="setColorSm('red')"></button>
+                    <button class="btn-select-sm green" onclick="setColorSm('green')"></button>
+                    <button class="btn-select-sm yellow" onclick="setColorSm('yellow')"></button>
+                    <button class="btn-select-sm pink" onclick="setColorSm('hotpink')"></button>
+                    <button class="btn-select-sm blue" onclick="setColorSm('blue')"></button>
+                </div>
+                <div class="btn-control-sm">
+                    <button class="btn-select-sm" onclick="setSize(2)">
+                        <div><span class="fa fa-paint-brush" style="font-size: 10px"></span></div>
+                    </button>
+                    <button class="btn-select-sm" onclick="setSize(5)">
+                        <div><span class="fa fa-paint-brush" style="font-size: 13px"></span></div>
+                    </button>
+                    <button class="btn-select-sm" onclick="setSize(10)">
+                        <div><span class="fa fa-paint-brush" style="font-size: 15px"></span></div>
+                    </button>
+                    <button class="btn-select-sm" onclick="setSize(15)">
+                        <div><span class="fa fa-paint-brush" style="font-size: 18px"></span></div>
+                    </button>
+                    <button class="btn-select-sm" onclick="setColor('white')">
+                        <div><span class="fa fa-eraser"></span></div>
+                    </button>
+                    <button class="btn-select-sm" onclick="clearCanvas()">
+                        <div><span class="fa fa-gavel"></span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="container">
@@ -73,143 +204,86 @@
     </form>
 </div>
 
+<!--SCRIPT FOR SM MODE-->
 <script>
-    context = document.getElementById("canvasPaintLg").getContext("2d");
-    context.fillStyle = "#fff";
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    //vaziyate naghashi
-    var paint;
-    var colorPick = "#00ff00";
-    var sizePick = 1;
-    //var image=new Image();
-    $('#canvasPaintLg').mousedown(function (e) {
-        paint = true;
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-        redrawLg();
-    });
-
-    $('#canvasPaintLg').mousemove(function (e) {
-        if (paint) {
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-            redrawLg();
-        }
-    });
-
-    $('#canvasPaintLg').mouseup(function (e) {
-        paint = false;
-    });
-
-    $('#canvasPaintLg').mouseleave(function (e) {
-        paint = false;
-    });
-    var clickXlg = new Array();
-    var clickYlg = new Array();
-    var clickDraglg = new Array();
-    var colorLg = new Array();
-    var sizeLg = new Array();
-
-    function addClick(x, y, dragging) {
-        clickXlg.push(x);
-        clickYlg.push(y);
-        clickDraglg.push(dragging);
-        colorLg.push(colorPick);
-        sizeLg.push(sizePick);
-    }
-
-    function redrawLg() {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-        context.lineJoin = "round";
-        context.fillStyle = "#fff";
-        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-        for (var i = 0; i < clickXlg.length; i++) {
-            context.beginPath();
-            if (clickDraglg[i] && i) {
-                context.moveTo(clickXlg[i - 1], clickYlg[i - 1]);
-            } else {
-                context.moveTo(clickXlg[i] - 1, clickYlg[i]);
-            }
-            context.lineTo(clickXlg[i], clickYlg[i]);
-            context.strokeStyle = colorLg[i];
-            context.lineWidth = sizeLg[i];
-            //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
-            context.closePath();
-            context.stroke();
-        }
-    }
-
-    //for sm view
     contextSm = document.getElementById("canvasPaintSm").getContext("2d");
+    contextSm.fillStyle = "#fff";
+    contextSm.fillRect(0, 0, contextSm.canvas.width, contextSm.canvas.height);
+    //vaziyate naghashi
+    var paintSm;
+    var colorPickSm = "#00ff00";
+    var sizePickSm = 1;
+    //var image=new Image();
     $('#canvasPaintSm').mousedown(function (e) {
-        paint = true;
+        paintSm = true;
         addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-
-        redraw();
+        redrawSm();
     });
 
     $('#canvasPaintSm').mousemove(function (e) {
-        if (paint) {
+        if (paintSm) {
             addClickSm(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-            redraw();
+            redrawSm();
         }
     });
 
     $('#canvasPaintSm').mouseup(function (e) {
-        paint = false;
+        paintSm = false;
     });
 
     $('#canvasPaintSm').mouseleave(function (e) {
-        paint = false;
+        paintSm = false;
     });
-    var clickX = new Array();
-    var clickY = new Array();
-    var clickDrag = new Array();
-    var color = new Array();
+    var clickXSm = new Array();
+    var clickYSm = new Array();
+    var clickDragSm = new Array();
+    var colorSm = new Array();
+    var sizeSm = new Array();
 
     function addClickSm(x, y, dragging) {
-        clickX.push(x);
-        clickY.push(y);
-        clickDrag.push(dragging);
-        color.push(getColor());
+        clickXSm.push(x);
+        clickYSm.push(y);
+        clickDragSm.push(dragging);
+        colorSm.push(colorPickSm);
+        sizeSm.push(sizePickSm);
     }
 
-    function redraw() {
-        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-        contextSm.strokeStyle = "#df4b26";
+    function redrawSm() {
+        contextSm.clearRect(0, 0, contextSm.canvas.width, contextSm.canvas.height); // Clears the canvas
         contextSm.lineJoin = "round";
-        contextSm.lineWidth = 5;
-
-        for (var i = 0; i < clickX.length; i++) {
+        contextSm.fillStyle = "#fff";
+        contextSm.fillRect(0, 0, contextSm.canvas.width, contextSm.canvas.height);
+        for (var i = 0; i < clickXSm.length; i++) {
             contextSm.beginPath();
-            if (clickDrag[i] && i) {
-                contextSm.moveTo(clickX[i - 1], clickY[i - 1]);
+            contextSm.lineWidth = sizeSm[i];
+            contextSm.strokeStyle = colorSm[i];
+            if (clickDragSm[i] && i) {
+                contextSm.moveTo(clickXSm[i - 1], clickYSm[i - 1]);
             } else {
-                contextSm.moveTo(clickX[i] - 1, clickY[i]);
+                contextSm.moveTo(clickXSm[i] - 1, clickYSm[i]);
             }
-            contextSm.lineTo(clickX[i], clickY[i]);
-            contextSm.strokeStyle = color[i];
+            contextSm.lineTo(clickXSm[i], clickYSm[i]);
+            //     context.drawImage(image, clickXlg[i], clickYlg[i], 100, 100);
             contextSm.closePath();
             contextSm.stroke();
         }
     }
 
-    function clearCanvas() {
-        contextSm.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-        for (var i = 0; i < clickXlg.length; i++) {
-            clickXlg = [];
-            clickYlg = [];
-            clickDraglg = [];
-            colorLg = [];
-        }
-        redrawLg();
+    function clearCanvasSm() {
+        contextSm.clearRect(0, 0, contextSm.canvas.width, contextSm.canvas.height); // Clears the canvas
+        clickXSm = [];
+        clickYSm = [];
+        clickDragSm = [];
+        colorSm = [];
+        redrawSm();
     }
 
-    function setColor(colors) {
-        colorPick = colors;
+    function setColorSm(colors) {
+        colorPickSm = colors;
     }
 
-    function setSize(size) {
-        sizePick = size;
+    function setSizeSm(size) {
+        sizePickSm = size;
     }
 
     /*
@@ -217,11 +291,9 @@
         image.src="img/Icon-512.png";
         setSize(0);
     }*/
-    var png;
-
-    function save() {
+    function saveSm() {
         //png = ReImg.fromCanvas(document.getElementById('canvasPaintLg')).toPng();
-        var canvas = document.getElementById("canvasPaintLg");
+        var canvas = document.getElementById("canvasPaintSm");
         canvas.toBlob(function (blob) {
             saveAs(blob, "output.png");
         }, "image/png");
@@ -229,6 +301,8 @@
 
 
 </script>
+
+
 <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
